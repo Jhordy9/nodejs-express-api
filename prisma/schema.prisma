@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  //
+  name        String
+  age         Int
+  nationality String
+  image       String
+  //
+  team        Team?    @relation(fields: [teamId], references: [id])
+  teamId      String?  @map("team_id")
+  score       Score[]
+
+  @@map("players")
+}
+
+model Team {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  //
+  name         String
+  location     String
+  stadium      String
+  //
+  players      Player[]
+  homeEvent    Event[]  @relation("homeEvent")
+  visitorEvent Event[]  @relation("visitorEvent")
+  score        Score[]
+
+  @@map("teams")
+}
+
+model Competition {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  //
+  name      String
+  image     String
+  event     Event[]
+
+  @@map("competitions")
+}
+
+model Score {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  //
+  team      Team     @relation(fields: [teamId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+  player    Player   @relation(fields: [playerId], references: [id])
+  teamId    String   @map("team_id")
+  eventId   String   @map("event_id")
+  playerId  String   @map("player_id")
+}
+
+enum Status {
+  LIVE
+  FINISHED
+  NOT_STARTED
+}
+
+model Event {
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  startTime     DateTime    @map("start_time")
+  //
+  status        Status
+  //
+  homeTeam      Team        @relation("homeEvent", fields: [homeTeamId], references: [id])
+  visitorTeam   Team        @relation("visitorEvent", fields: [visitorTeamId], references: [id])
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  competitionId String      @map("competition_id")
+  homeTeamId    String      @map("home_team_id")
+  visitorTeamId String      @map("visitor_team_id")
+  score         Score[]
+
+  @@map("events")
+}
