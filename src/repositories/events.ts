@@ -1,8 +1,8 @@
 import { db } from '../../prisma';
-import { EventFilterParamsSchemaType } from '../validators/events';
+import { EventFilterQuerySchemaType } from '../validators/events';
 
 export const eventsRepository = {
-  getEvents: async (args: EventFilterParamsSchemaType) => {
+  getEvents: async (args: EventFilterQuerySchemaType) => {
     const events = await db.event.findMany({
       where: {
         status: args.status,

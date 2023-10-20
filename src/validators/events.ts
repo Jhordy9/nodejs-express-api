@@ -1,6 +1,7 @@
+import { Status } from '@prisma/client';
 import { z } from 'zod';
 
-const StatusEnum = z.enum(['LIVE', 'FINISHED', 'NOT_STARTED']);
+const StatusEnum = z.nativeEnum(Status);
 
 const TeamSchema = z.lazy(() =>
   z.object({
@@ -41,12 +42,12 @@ const PlayerSchema = z.object({
   teamId: z.string().optional(),
 });
 
-export const EventFilterParamsSchema = z.object({
-  status: StatusEnum.optional().default('LIVE'),
+export const EventFilterQuerySchema = z.object({
+  status: StatusEnum.optional(),
   date: z.date().optional(),
 });
 
+export const EventsSchema = z.array(EventSchema);
+
 export type EventSchemaType = z.infer<typeof EventSchema>;
-export type EventFilterParamsSchemaType = z.infer<
-  typeof EventFilterParamsSchema
->;
+export type EventFilterQuerySchemaType = z.infer<typeof EventFilterQuerySchema>;

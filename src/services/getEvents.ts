@@ -1,11 +1,11 @@
 import { eventsRepository } from '../repositories/events';
 import {
-  EventFilterParamsSchemaType,
+  EventFilterQuerySchemaType,
   EventSchemaType,
 } from '../validators/events';
 
 export const getEvents = async (
-  args: EventFilterParamsSchemaType
+  args: EventFilterQuerySchemaType
 ): Promise<Array<EventSchemaType>> => {
   const events = await eventsRepository.getEvents(args);
 
