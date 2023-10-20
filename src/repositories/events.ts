@@ -1,5 +1,9 @@
 import { db } from '../../prisma';
-import { EventFilterQuerySchemaType } from '../validators/events';
+import {
+  EventCreateBodySchemaType,
+  EventFilterQuerySchemaType,
+  EventUpdateBodySchemaType,
+} from '../validators/events';
 
 export const eventsRepository = {
   getEvents: async (args: EventFilterQuerySchemaType) => {
@@ -46,4 +50,36 @@ export const eventsRepository = {
 
     return eventsWithScores;
   },
+  createEvent: ({
+    competitionId,
+    homeTeamId,
+    startTime,
+    status,
+    visitorTeamId,
+  }: EventCreateBodySchemaType) =>
+    db.event.create({
+      data: {
+        startTime,
+        status,
+        competitionId,
+        homeTeamId,
+        visitorTeamId,
+      },
+    }),
+  updateEvent: ({ eventId, score, status }: EventUpdateBodySchemaType) =>
+    db.event.update({
+      where: {
+        id: eventId,
+      },
+
+      data: {
+        status,
+        score: {
+          create: {
+            playerId: score.playerId,
+            teamId: score.teamId,
+          },
+        },
+      },
+    }),
 };

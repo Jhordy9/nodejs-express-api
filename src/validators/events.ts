@@ -42,6 +42,23 @@ const PlayerSchema = z.object({
   teamId: z.string().optional(),
 });
 
+export const EventCreateBodySchema = z.object({
+  startTime: z.date(),
+  status: StatusEnum,
+  homeTeamId: z.string(),
+  visitorTeamId: z.string(),
+  competitionId: z.string(),
+});
+
+export const EventUpdateBodySchema = z.object({
+  eventId: z.string(),
+  status: StatusEnum.optional(),
+  score: z.object({
+    teamId: z.string(),
+    playerId: z.string(),
+  }),
+});
+
 export const EventFilterQuerySchema = z.object({
   status: StatusEnum.optional(),
   date: z.date().optional(),
@@ -51,3 +68,5 @@ export const EventsSchema = z.array(EventSchema);
 
 export type EventSchemaType = z.infer<typeof EventSchema>;
 export type EventFilterQuerySchemaType = z.infer<typeof EventFilterQuerySchema>;
+export type EventUpdateBodySchemaType = z.infer<typeof EventUpdateBodySchema>;
+export type EventCreateBodySchemaType = z.infer<typeof EventCreateBodySchema>;
