@@ -1,7 +1,7 @@
 version: "3"
 services:
   postgres:
-    container_name: arcca-app
+    container_name: nodejs-express-api
     image: postgres:14
     ports:
       - 5432:5432
