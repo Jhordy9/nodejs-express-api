@@ -16,8 +16,16 @@ export const eventsRepository = {
       },
       include: {
         competition: true,
-        homeTeam: true,
-        visitorTeam: true,
+        homeTeam: {
+          include: {
+            players: true,
+          },
+        },
+        visitorTeam: {
+          include: {
+            players: true,
+          },
+        },
       },
       orderBy: {
         startTime: 'asc',
@@ -59,7 +67,7 @@ export const eventsRepository = {
   }: EventCreateBodySchemaType) =>
     db.event.create({
       data: {
-        startTime,
+        startTime: new Date(startTime),
         status,
         competitionId,
         homeTeamId,
@@ -71,7 +79,6 @@ export const eventsRepository = {
       where: {
         id: eventId,
       },
-
       data: {
         status,
         score: {

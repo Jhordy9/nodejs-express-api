@@ -10,8 +10,6 @@ const TeamSchema = z.lazy(() =>
     location: z.string(),
     stadium: z.string(),
     players: z.array(PlayerSchema),
-    homeEvent: z.array(EventSchema),
-    visitorEvent: z.array(EventSchema),
   })
 );
 const CompetitionSchema = z.object({
@@ -43,7 +41,7 @@ const PlayerSchema = z.object({
 });
 
 export const EventCreateBodySchema = z.object({
-  startTime: z.date(),
+  startTime: z.string(),
   status: StatusEnum,
   homeTeamId: z.string(),
   visitorTeamId: z.string(),
@@ -61,7 +59,7 @@ export const EventUpdateBodySchema = z.object({
 
 export const EventFilterQuerySchema = z.object({
   status: StatusEnum.optional(),
-  date: z.date().optional(),
+  date: z.string().optional(),
 });
 
 export const EventsSchema = z.array(EventSchema);
