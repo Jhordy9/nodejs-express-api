@@ -37,7 +37,7 @@ describe('Events Routes', () => {
           competitionId: competition?.id,
         },
         {
-          startTime: '2023-10-21T18:38:09.266Z',
+          startTime: '2023-08-21T18:38:09.266Z',
           status: Status.LIVE,
           homeTeamId: teams[0].id,
           visitorTeamId: teams[1].id,
@@ -69,6 +69,14 @@ describe('Events Routes', () => {
     it('should fetch events with specific status', async () => {
       const status = Status.NOT_STARTED;
       const response = await request(app).get(`/api/events?status=${status}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toBe(1);
+    });
+
+    it('should fetch events from a date', async () => {
+      const date = '2023-08-21T18:38:09.266Z';
+      const response = await request(app).get(`/api/events?date=${date}`);
 
       expect(response.status).toBe(200);
       expect(response.body.length).toBe(1);
