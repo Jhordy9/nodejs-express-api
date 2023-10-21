@@ -49,3 +49,19 @@ To start the development server, run:
 - **[Hapi Boom](https://hapi.dev/module/boom/)**: Creates HTTP-friendly error objects.
 
 For an exhaustive list of dependencies, refer to the `package.json` file.
+
+## Possible Improvements
+
+### Maintaining a Scalable and Maintainable Codebase
+
+As projects grow, their complexity often increases, making maintainability a concern. To ensure the code remains scalable and maintainable, here are some recommended steps:
+
+#### Modularization by Context
+
+By breaking down the application into smaller, context-specific modules and sub-modules, it becomes more comfortable to manage and understand the code. Each module should handle a specific business logic or function of the application. For instance, if you have user-related functionalities (like registration, authentication, user profile management), they could all be within a `user` module. 
+
+#### Utilizing Controllers for Routes
+
+Instead of having all the route handlers within the route definitions, consider using controllers. Controllers will hold the business logic for each route, making the routes file cleaner and more straightforward. This separation ensures that if there's a need to change the underlying logic for a route, you'll only have to modify the controller, leaving the route definition untouched.
+
+This design pattern not only improves readability but also ensures that each part of the application adheres to the Single Responsibility Principle. In the long run, it aids in making debugging, testing, and adding new features more manageable.
