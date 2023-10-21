@@ -11,6 +11,7 @@ import { Status } from '@prisma/client';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import { createEvent } from './services/createEvent';
 import { updateEvent } from './services/updateEvent';
+import { isBoom } from '@hapi/boom';
 
 export const router = Router();
 
@@ -21,15 +22,25 @@ router.get(
     response: EventsSchema,
   }),
   async (req, res) => {
-    const events = validateResponse({
-      data: await getEvents({
-        status: req.query.status ?? Status.LIVE,
-        date: req.query.date,
-      }),
-      schema: EventsSchema,
-    });
+    try {
+      const events = validateResponse({
+        data: await getEvents({
+          status: req.query.status ?? Status.LIVE,
+          date: req.query.date,
+        }),
+        schema: EventsSchema,
+      });
 
-    res.json(events).status(200);
+      return res.json(events).status(200);
+    } catch (e) {
+      if (isBoom(e)) {
+        console.error(e);
+        throw e;
+      }
+
+      console.error(e);
+      throw e;
+    }
   }
 );
 
@@ -39,9 +50,19 @@ router.post(
     body: EventCreateBodySchema,
   }),
   async (req, res) => {
-    await createEvent(req.body);
+    try {
+      await createEvent(req.body);
 
-    return res.status(StatusCodes.CREATED).send(ReasonPhrases.CREATED);
+      return res.status(StatusCodes.CREATED).send(ReasonPhrases.CREATED);
+    } catch (e) {
+      if (isBoom(e)) {
+        console.error(e);
+        throw e;
+      }
+
+      console.error(e);
+      throw e;
+    }
   }
 );
 
@@ -51,8 +72,18 @@ router.put(
     body: EventUpdateBodySchema,
   }),
   async (req, res) => {
-    await updateEvent(req.body);
+    try {
+      await updateEvent(req.body);
 
-    return res.status(StatusCodes.OK).send(ReasonPhrases.OK);
+      return res.status(StatusCodes.OK).send(ReasonPhrases.OK);
+    } catch (e) {
+      if (isBoom(e)) {
+        console.error(e);
+        throw e;
+      }
+
+      console.error(e);
+      throw e;
+    }
   }
 );
