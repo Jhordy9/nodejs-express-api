@@ -1,0 +1,191 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Events API",
+    "description": "API for managing events, including creation, updating and deletion."
+  },
+  "tags": [
+    {
+      "name": "Endpoints"
+    }
+  ],
+  "paths": {
+    "/api/events": {
+      "get": {
+        "tags": ["Endpoints"],
+        "summary": "Retrieve a list of events",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Status of the events to retrieve",
+            "type": "string",
+            "enum": ["LIVE", "FINISHED", "NOT_STARTED"]
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date for filtering events",
+            "type": "string",
+            "format": "date"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of events",
+            "schema": {
+              "$ref": "#/definitions/Events"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Endpoints"],
+        "summary": "Create a new event",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Event object that needs to be added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventCreateBody"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Event created"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Endpoints"],
+        "summary": "Update an existing event",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Event object that needs to be updated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventUpdateBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event updated"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "startTime": { "type": "string", "format": "date-time" },
+        "status": {
+          "type": "string",
+          "enum": ["LIVE", "FINISHED", "NOT_STARTED"]
+        },
+        "homeTeam": { "$ref": "#/definitions/Team" },
+        "visitorTeam": { "$ref": "#/definitions/Team" },
+        "homeTeamScore": { "type": "number" },
+        "visitorTeamScore": { "type": "number" },
+        "competition": { "$ref": "#/definitions/Competition" }
+      }
+    },
+    "EventCreateBody": {
+      "type": "object",
+      "properties": {
+        "startTime": { "type": "string", "format": "date-time" },
+        "status": {
+          "type": "string",
+          "enum": ["LIVE", "FINISHED", "NOT_STARTED"]
+        },
+        "homeTeamId": { "type": "string" },
+        "visitorTeamId": { "type": "string" },
+        "competitionId": { "type": "string" }
+      }
+    },
+    "EventUpdateBody": {
+      "type": "object",
+      "properties": {
+        "eventId": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["LIVE", "FINISHED", "NOT_STARTED"],
+          "required": false
+        },
+        "score": {
+          "type": "object",
+          "properties": {
+            "teamId": { "type": "string" },
+            "playerId": { "type": "string" }
+          }
+        }
+      }
+    },
+    "Team": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "stadium": { "type": "string" },
+        "players": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Player" }
+        },
+        "homeEvent": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Event" }
+        },
+        "visitorEvent": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Event" }
+        }
+      }
+    },
+    "Competition": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "name": { "type": "string" },
+        "image": { "type": "string" }
+      }
+    },
+    "Player": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "age": { "type": "number" },
+        "nationality": { "type": "string" },
+        "image": { "type": "string" },
+        "team": { "$ref": "#/definitions/Team", "required": false },
+        "teamId": { "type": "string", "required": false }
+      }
+    },
+    "EventFilterQuery": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["LIVE", "OTHER_STATUS"],
+          "required": false
+        },
+        "date": { "type": "string", "format": "date-time", "required": false }
+      }
+    },
+    "Events": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Event" }
+    }
+  }
+}
