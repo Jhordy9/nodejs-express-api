@@ -85,7 +85,7 @@ model Event {
   //
   homeTeam      Team        @relation("homeEvent", fields: [homeTeamId], references: [id])
   visitorTeam   Team        @relation("visitorEvent", fields: [visitorTeamId], references: [id])
-  competition   Competition @relation(fields: [competitionId], references: [id])
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
   competitionId String      @map("competition_id")
   homeTeamId    String      @map("home_team_id")
   visitorTeamId String      @map("visitor_team_id")
